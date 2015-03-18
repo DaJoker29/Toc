@@ -59,54 +59,84 @@ var Toc = (function() {
     };
 
     /**
-     * Builds a map of all headings
+     * Builds a map of all headings with nesting
      * @param {NodeList} nodeList NodeList of Heading Elements
-     * @return {Array} map Map of the headings vital details
+     * @return {Array}
      */
     var mapHeadings = function( nodeList ) {
-        var map = [].map.call(nodeList, function( element, i ) {
-            var level = Number.parseInt(element.tagName.slice(1));
-            var obj = {
-                'id'        : element.id,
-                'text:'     : element.textContent,
-                'children'  : null
-            };
-
-            if (element === null) {
-                return;
-            }
-            
-            return obj;
+        var list = nodeToArray(nodeList);
+        var map = list.map(function( value, index, array ) {
+            console.log(array);
+            return buildItem( array );
         });
 
         return map;
     };
 
+    /**
+     * Build Map Item
+     * @param {Node} node Node to build the item out of
+     * @param {Number} level The next item in the array to determine if it should be a child
+     * @return {Obj}
+     */
+    var buildItem = function( array ) {
+        var node = array.shift();
+        var obj = {
+            'id': node.id,
+            'text': node.textContent,
+            'children': []
+        };
+
+        while (array[0] && level(node) < level(array[0])) {
+            obj.children.push(buildItem( array ));
+        }
+
+        return obj;
+    };
+
+    /**
+     * Returns the level of Heading tag
+     * @param {Node|Object} node Object to return the level of
+     * @return {Int}
+     */
+    var level = function( node ) {
+        return Number.parseInt(node.tagName.slice(1));
+    };
+
+    /**
+     * Convert NodeList to an Array
+     * @param {NodeList} nodeList NodeList to be converted
+     * @return {Array}
+     */
+    var nodeToArray = function( nodeList ) {
+        return Array.prototype.slice.call(nodeList);
+    };
+
     // Build Navigation Element
     var build = function( map ) {
-        var level, child;
-        var nav = document.querySelector('nav');
+        // var level, child;
+        // var nav = document.querySelector('nav');
 
-        forEach(map, function(element) {
-            if (level === undefined) {
-                level = element.level;
-                var ul = document.createElement('ul');
-                ul.appendChild(listItem(element));
-                nav.appendChild(ul);
-            } else if (level < element.level) {
-                level = element.level;
-                child = ulItem(element);
-            } else if (level === element.level) {
-                if(child !== undefined) {
-                    child.appendChild(listItem(element));
-                } else {
-                    nav.lastChild.appendChild(listItem(element));
-                }
-            } else if (level > element.level) {
-                child = undefined;
-                level = element.level;
-            }
-        });
+        // forEach(map, function(element) {
+        //     if (level === undefined) {
+        //         level = element.level;
+        //         var ul = document.createElement('ul');
+        //         ul.appendChild(listItem(element));
+        //         nav.appendChild(ul);
+        //     } else if (level < element.level) {
+        //         level = element.level;
+        //         child = ulItem(element);
+        //     } else if (level === element.level) {
+        //         if(child !== undefined) {
+        //             child.appendChild(listItem(element));
+        //         } else {
+        //             nav.lastChild.appendChild(listItem(element));
+        //         }
+        //     } else if (level > element.level) {
+        //         child = undefined;
+        //         level = element.level;
+        //     }
+        // });
     };
 
     var ulItem = function (obj) {
