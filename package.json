@@ -10,6 +10,20 @@
   "license": "GPLv2",
   "devDependencies": {
     "grunt": "^0.4.5",
-    "grunt-contrib-watch": "^0.6.1"
-  }
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jsdoc": "^0.6.3"
+  },
+  "dependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-jsdoc": "^0.5.8"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DaJoker29/Toc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DaJoker29/Toc/issues"
+  },
+  "homepage": "https://github.com/DaJoker29/Toc"
 }

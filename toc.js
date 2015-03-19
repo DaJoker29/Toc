@@ -1,10 +1,21 @@
+/**
+ * @author Dewitt A Buckingham III
+ * @copyright Zero Daedalus 2015
+ * @fileOverview Builds a Table of Contents based on h1-h6 heading tags
+ * @license http://www.gnu.org/licenses/gpl-2.0.html GPLv2
+ * @module  Toc
+ */
 var Toc = (function() {
 
     /**
      * Variables
      */
-    var Toc = {},
-        headings = 'h1, h2, h3, h4, h5, h6';
+    
+    /** @var {Object} Toc Public APIs */
+    var Toc = {};
+
+    /** @const {String} headings CSS selector to find all heading tags */
+    var headings = 'h1, h2, h3, h4, h5, h6';
 
     /**
      * Methods
@@ -12,11 +23,12 @@ var Toc = (function() {
     
     /**
      * Borrowed forEach() that works across Arrays, Objects and NodeLists
+     * 
+     * @method forEach
      * @author Chris Ferdinandi, http://github.com/cferdinandi/smooth-scroll
      * @license http://gomakethings.com/mit/ MIT License
-     *
-     * 
      * @private
+     *
      * @param {Array|Object|NodeList} collection Collection of items to iterate over
      * @param {Function} callback Callback function for each iteration
      * @param {Array|Object|NodeList} scope Object/NodeList/Array that forEach is iterating over (aka `this`)
@@ -38,9 +50,11 @@ var Toc = (function() {
     /**
     * Generates a simple random string to represent an unique ID
     *
+    * @method generateID
+    * @return {String} Randomized alphanumeric string
     * @private
     */
-    var createId = function () {
+    var generateID = function () {
         return '_' + Math.random().toString(36).substr(2, 9);
     };
     
@@ -48,20 +62,23 @@ var Toc = (function() {
      * Checks all Heading Tags (h1-h6) for a unique ID.
      * If one doesn't exist, it creates one based.
      *
-     *
+     * @method  buildIds
      * @private
      * @param {NodeList} nodeList NodeList of the elements being checked for IDs
      */
-    var identify = function( nodeList ) {
+    var buildIds = function( nodeList ) {
         forEach(nodeList, function( element ) {
-            element.id = element.id || createId();
+            element.id = element.id || generateID();
         });
     };
 
     /**
      * Builds a map of all headings with nesting
+     *
+     * @method mapHeadings
+     * @private
      * @param {NodeList} nodeList NodeList of Heading Elements
-     * @return {Array}
+     * @return {Array} An array representing all levels of headings with proper nesting
      */
     var mapHeadings = function( nodeList ) {
         var list = nodeToArray(nodeList);
@@ -82,9 +99,10 @@ var Toc = (function() {
 
     /**
      * Build Map Item
-     * @param {Node} node Node to build the item out of
-     * @param {Number} level The next item in the array to determine if it should be a child
-     * @return {Obj}
+     *
+     * @method buildItem
+     * @param {Array} array Heading nodes array
+     * @return {Obj} Properly configured object to populate mapping array
      */
     var buildItem = function( array ) {
         var node = array.shift();
@@ -103,8 +121,10 @@ var Toc = (function() {
 
     /**
      * Returns the level of Heading tag
+     *
+     * @method  level
      * @param {Node|Object} node Object to return the level of
-     * @return {Int}
+     * @return {Int} The level of heading (1-6)
      */
     var level = function( node ) {
         return Number.parseInt(node.tagName.slice(1));
@@ -112,8 +132,10 @@ var Toc = (function() {
 
     /**
      * Convert NodeList to an Array
+     *
+     * @method nodeToArray
      * @param {NodeList} nodeList NodeList to be converted
-     * @return {Array}
+     * @return {Array} Converted nodelist array
      */
     var nodeToArray = function( nodeList ) {
         return Array.prototype.slice.call(nodeList);
@@ -142,17 +164,23 @@ var Toc = (function() {
     //     return li;
     // };
 
+    /**
+     * Initialize and execute module
+     *
+     * @public
+     * @method run
+     */
     Toc.run = function() {
         var nodeList = document.querySelectorAll(headings);
 
         // Run
-        identify(nodeList);
+        buildIds(nodeList);
         var map = mapHeadings(nodeList);
         console.log('Map: ', map);
 
         build(map);
     };
 
-    // Return Public API
+    /** @exports Toc */
     return Toc;
 })();
