@@ -65,10 +65,17 @@ var Toc = (function() {
      */
     var mapHeadings = function( nodeList ) {
         var list = nodeToArray(nodeList);
-        var map = list.map(function( value, index, array ) {
-            console.log(array);
-            return buildItem( array );
-        });
+        var map = [];
+        var i = list.length - 1;
+        while(i > 0 && list.length) {
+            var item = buildItem (list);
+            map.push( item );
+            i = list.length - 1;
+        }
+
+        // list.forEach(function( value, index, array ) {
+        //     map.push( buildItem( array ) );
+        // });
 
         return map;
     };
@@ -114,49 +121,26 @@ var Toc = (function() {
 
     // Build Navigation Element
     var build = function( map ) {
-        // var level, child;
-        // var nav = document.querySelector('nav');
-
-        // forEach(map, function(element) {
-        //     if (level === undefined) {
-        //         level = element.level;
-        //         var ul = document.createElement('ul');
-        //         ul.appendChild(listItem(element));
-        //         nav.appendChild(ul);
-        //     } else if (level < element.level) {
-        //         level = element.level;
-        //         child = ulItem(element);
-        //     } else if (level === element.level) {
-        //         if(child !== undefined) {
-        //             child.appendChild(listItem(element));
-        //         } else {
-        //             nav.lastChild.appendChild(listItem(element));
-        //         }
-        //     } else if (level > element.level) {
-        //         child = undefined;
-        //         level = element.level;
-        //     }
-        // });
     };
 
-    var ulItem = function (obj) {
-        var ul = document.createElement('ul');
-        ul.appendChild(listItem(obj));
+    // var ulItem = function (obj) {
+    //     var ul = document.createElement('ul');
+    //     ul.appendChild(listItem(obj));
 
-        return ul;
-    };
+    //     return ul;
+    // };
 
-    var listItem = function( obj ) {
-        var a = document.createElement('a');
-        var li = document.createElement('li');
+    // var listItem = function( obj ) {
+    //     var a = document.createElement('a');
+    //     var li = document.createElement('li');
 
-        a.href = '#' + obj.id;
-        a.textContent = obj.text;
+    //     a.href = '#' + obj.id;
+    //     a.textContent = obj.text;
 
-        li.appendChild(a);
+    //     li.appendChild(a);
 
-        return li;
-    };
+    //     return li;
+    // };
 
     Toc.run = function() {
         var nodeList = document.querySelectorAll(headings);
@@ -164,7 +148,7 @@ var Toc = (function() {
         // Run
         identify(nodeList);
         var map = mapHeadings(nodeList);
-        console.log(map);
+        console.log('Map: ', map);
 
         build(map);
     };
