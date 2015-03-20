@@ -1,6 +1,6 @@
 {
   "name": "toc",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Javascript module to build Table of Contents style navigation for HTML documents",
   "main": "Gruntfile.js",
   "scripts": {
