@@ -141,8 +141,46 @@ var Toc = (function() {
         return Array.prototype.slice.call(nodeList);
     };
 
-    // Build Navigation Element
+    /**
+     * Build Navigation Document Fragment
+     *
+     * @private
+     * @param  {Array} map Array with object representing all line items for table of contents
+     */
     var build = function( map ) {
+        var fragment = document.createDocumentFragment();
+        var ul = document.createElement('ul');
+        var nav = document.querySelector('nav');
+
+        map.forEach(function( element, index, array ) {
+            ul.appendChild(buildLi(element));
+        });
+
+        fragment.appendChild(ul);
+        nav.appendChild(fragment);
+    };
+
+    var buildLi = function( element ) {
+        var li = document.createElement('li');
+        var a = document.createElement('a');
+        var fragment = document.createDocumentFragment();
+
+        a.href = '#' + element.id;
+        a.textContent = element.text;
+
+        li.appendChild(a);
+        fragment.appendChild(li);
+
+        // Build Children
+        if( element.children.length > 0 ) {
+            var ul = document.createElement('ul');
+            element.children.forEach(function( el, index, array ) {
+                ul.appendChild(buildLi(el));
+            });
+            fragment.appendChild(ul);
+        }
+
+        return fragment;
     };
 
     // var ulItem = function (obj) {
